@@ -5,7 +5,12 @@ import torch
 
 # --- 1. SYSTEM CONFIG & CUSTOM STYLING (Quicksand Font & Theme Colors) ---
 st.set_page_config(page_title="Gaia", page_icon="🌎", layout="wide")
-
+/* Add this inside your existing CSS block near the top */
+.stTextArea textarea:disabled {
+    color: #00241B !important;
+    -webkit-text-fill-color: #00241B !important; /* Forces mobile/safari/chrome text color */
+    background-color: #FFFFFF !important;
+}
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
@@ -185,17 +190,23 @@ with tab1:
     col_ex1, col_ex2, col_ex3 = st.columns(3)
     if col_ex1.button("📌 Disposal Setup", use_container_width=True):
         st.session_state.chat_history.append({"role": "user", "content": "Disposal"})
-        reply = respond("Disposal", st.session_state.chat_history[:-1])
+        # Clean history array formatting for safe lookup
+        clean_hist = [{"role": m["role"], "content": m["content"]} for m in st.session_state.chat_history[:-1]]
+        reply = respond("Disposal", clean_hist)
         st.session_state.chat_history.append({"role": "assistant", "content": reply})
         st.rerun()
+        
     if col_ex2.button("✂️ Crafting Setup", use_container_width=True):
         st.session_state.chat_history.append({"role": "user", "content": "Crafting"})
-        reply = respond("Crafting", st.session_state.chat_history[:-1])
+        clean_hist = [{"role": m["role"], "content": m["content"]} for m in st.session_state.chat_history[:-1]]
+        reply = respond("Crafting", clean_hist)
         st.session_state.chat_history.append({"role": "assistant", "content": reply})
         st.rerun()
+        
     if col_ex3.button("🏷️ Upscaling Setup", use_container_width=True):
         st.session_state.chat_history.append({"role": "user", "content": "Upscaling"})
-        reply = respond("Upscaling", st.session_state.chat_history[:-1])
+        clean_hist = [{"role": m["role"], "content": m["content"]} for m in st.session_state.chat_history[:-1]]
+        reply = respond("Upscaling", clean_hist)
         st.session_state.chat_history.append({"role": "assistant", "content": reply})
         st.rerun()
 
@@ -212,7 +223,8 @@ with tab1:
         
         with st.chat_message("assistant"):
             with st.spinner("Gaia is typing..."):
-                bot_reply = respond(user_prompt, st.session_state.chat_history[:-1])
+                clean_hist = [{"role": m["role"], "content": m["content"]} for m in st.session_state.chat_history[:-1]]
+                bot_reply = respond(user_prompt, clean_hist)
                 st.write(bot_reply)
         st.session_state.chat_history.append({"role": "assistant", "content": bot_reply})
 
