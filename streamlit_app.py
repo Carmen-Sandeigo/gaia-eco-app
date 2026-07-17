@@ -6,60 +6,68 @@ import torch
 # --- 1. SYSTEM CONFIG & CUSTOM STYLING (Quicksand Font & Theme Colors) ---
 st.set_page_config(page_title="Gaia", page_icon="🌎", layout="wide")
 
-# --- UPDATE THE CSS STYLING SECTION NEAR THE TOP OF YOUR FILE ---
-
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght=400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
     
-    /* 1. Global Font and Text Color Fix */
-    html, body, [data-testid="stAppViewContainer"], .stApp * {
+    /* 1. FORCE FONT FAMILY EVERYWHERE */
+    * {
         font-family: 'Quicksand', sans-serif !important;
-        color: #00241B !important;
     }
     
-    /* 2. Soft Background Tint */
-    [data-testid="stAppViewContainer"] {
+    html, body, [data-testid="stAppViewContainer"], .stApp {
         background-color: #F4FFF5 !important;
     }
 
-    /* 3. Strip all default borders, shadows, and background blocks to look like Gradio */
-    [data-testid="stMetric"], 
-    [data-testid="stMetricContainer"], 
-    div[data-testid="stVerticalBlock"] > div {
-        border: none !important;
-        background-color: transparent !important;
-        box-shadow: none !important;
-    }
-
-    /* 4. Fix Text Inputs & Textareas (Rounded, Soft Gray Border) */
-    .stTextArea textarea, .stTextInput input {
-        background-color: white !important;
+    /* 2. TEXT COLOR REVISIONS (Main body & headers) */
+    h1, h2, h3, h4, h5, h6, p, span, label, [data-testid="stMarkdownContainer"] p {
         color: #00241B !important;
-        border: 1px solid #E0E0E0 !important;
-        border-radius: 12px !important;
-        padding: 12px !important;
     }
 
-    /* 5. Custom Button Styling (Matches your deep forest green and rounded corners) */
-    div.stButton > button {
+    /* 3. BUTTONS: Solid Green Background (#04724D) with Crisp White Text */
+    div.stButton > button, div.stButton > button p {
         background-color: #04724D !important;
-        color: white !important;
+        color: #FFFFFF !important; /* Forces text color white */
         border-radius: 12px !important;
         font-weight: 600 !important;
         border: none !important;
-        padding: 10px 20px !important;
-        transition: background-color 0.2s ease !important;
     }
     
     div.stButton > button:hover {
         background-color: #03583C !important;
-        color: white !important;
+        color: #FFFFFF !important;
     }
 
-    /* 6. Clean Tab Bar to resemble Gradio's minimalistic tabs */
+    /* 4. CHATBOT INTERFACE FIXES (Clean text visibility) */
+    [data-testid="stChatMessage"] {
+        background-color: #EAF7EA !important; /* Soft green bubble */
+        border-radius: 12px !important;
+        border: none !important;
+        padding: 15px !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Target specific chat text containers */
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p {
+        color: #00241B !important;
+    }
+
+    /* User specific bubble alternative tint if desired */
+    [data-testid="stChatMessageContent"] {
+        color: #00241B !important;
+    }
+
+    /* 5. INPUT BOX FIXES */
+    .stTextArea textarea, .stTextInput input, [data-testid="stChatInput"] textarea {
+        background-color: #FFFFFF !important;
+        color: #00241B !important;
+        border: 1px solid #E0E0E0 !important;
+        border-radius: 12px !important;
+    }
+
+    /* 6. TAB NAVIGATION CLEANUP */
     button[data-baseweb="tab"] {
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         color: #04724D !important;
     }
     
@@ -68,15 +76,13 @@ st.markdown("""
         color: #00241B !important;
     }
 
-    /* 7. Beautifully curve the status/info message box */
-    div[data-testid="stNotification"] {
-        border-radius: 12px !important;
-        background-color: #EAF7EA !important;
-        border: 1px solid #C8E6C9 !important;
+    /* Hide metric borders entirely */
+    [data-testid="stMetric"], [data-testid="stMetricContainer"] {
+        border: none !important;
+        box-shadow: none !important;
     }
     </style>
     """, unsafe_allow_html=True)
-
 
 # --- 2. DATA FILE LOADER ---
 with open("envirobot_knowledge_base.txt", "r", encoding="utf-8") as file:
