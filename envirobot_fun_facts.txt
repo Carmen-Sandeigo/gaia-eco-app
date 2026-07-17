@@ -1,0 +1,117 @@
+ENVIROBOT FUN FACTS KNOWLEDGE BASE
+Purpose: Retrieval source for a RAG chatbot to surface a fun, bite-sized fact alongside its main answer, matched by keyword/category to whatever material or topic the user is asking about. Each entry is one self-contained chunk: CATEGORY (for matching), FACT (the shareable line), CONTEXT (why it's true / a bit more detail).
+
+=== PLASTIC ===
+
+CATEGORY: plastic, bottles, recycling
+FACT: A single plastic bottle can take up to 450 years to decompose — that's longer than the United States has existed as a country.
+CONTEXT: Plastic doesn't biodegrade like organic material; it photodegrades into smaller and smaller microplastics instead.
+
+CATEGORY: plastic, ocean, pollution
+FACT: There's a floating mass of plastic debris in the Pacific Ocean, the Great Pacific Garbage Patch, estimated to be roughly three times the size of France.
+CONTEXT: It's not a solid "island" but a dispersed soup of plastic fragments concentrated by ocean currents.
+
+CATEGORY: plastic, recycling, statistics
+FACT: Only about 9% of all the plastic ever made has actually been recycled.
+CONTEXT: Most plastic ends up in landfills, incinerated, or in the natural environment; recycling infrastructure struggles to keep up with production.
+
+CATEGORY: plastic bags
+FACT: The average plastic shopping bag is used for about 12 minutes before being thrown away, but takes centuries to break down.
+CONTEXT: This mismatch between use-time and decompose-time is why many cities have banned or taxed single-use bags.
+
+=== GLASS ===
+
+CATEGORY: glass, recycling
+FACT: Glass is one of the only materials that can be recycled endlessly without ever losing quality or purity.
+CONTEXT: Unlike plastic, which degrades slightly each time it's reprocessed, glass can be melted and reshaped indefinitely.
+
+CATEGORY: glass, energy
+FACT: Recycling just one glass bottle saves enough energy to light a light bulb for four hours.
+CONTEXT: Melting recycled glass ("cullet") takes less energy than melting raw sand, soda ash, and limestone from scratch.
+
+=== ALUMINUM & METAL ===
+
+CATEGORY: aluminum, cans, recycling
+FACT: A recycled aluminum can could be back on a store shelf as a new can in as little as 60 days.
+CONTEXT: Aluminum recycling is one of the fastest and most efficient loops in the recycling world.
+
+CATEGORY: aluminum, energy
+FACT: Recycling aluminum uses about 95% less energy than making it from raw bauxite ore.
+CONTEXT: This is why aluminum cans are considered one of the most valuable items in a recycling bin.
+
+CATEGORY: metal, steel
+FACT: Steel is the most recycled material on Earth by weight, more than plastic, paper, and glass combined.
+CONTEXT: Steel's magnetic properties make it easy for recycling facilities to automatically sort it out from other waste.
+
+=== PAPER & CARDBOARD ===
+
+CATEGORY: paper, trees, recycling
+FACT: Recycling one ton of paper saves about 17 trees, 7,000 gallons of water, and enough energy to power a home for six months.
+CONTEXT: Paper fibers can typically be recycled 5-7 times before they become too short and weak to reuse.
+
+CATEGORY: cardboard, packaging
+FACT: Corrugated cardboard is one of the most recycled packaging materials in the world, with recovery rates often above 90% in the US.
+CONTEXT: Its high recovery rate is partly because businesses generate large, clean, easy-to-bale volumes of it.
+
+=== FOOD WASTE ===
+
+CATEGORY: food waste, statistics
+FACT: If global food waste were a country, it would be the third-largest greenhouse gas emitter in the world, behind only the US and China.
+CONTEXT: This is because of the combined emissions from growing, transporting, and then landfilling wasted food, where it produces methane.
+
+CATEGORY: food waste, methane
+FACT: A rotting apple core in a landfill produces methane, a gas over 25 times more potent at trapping heat than carbon dioxide.
+CONTEXT: Food waste breaks down without oxygen in landfills (anaerobic decomposition), which produces methane instead of the CO2 released from composting.
+
+CATEGORY: food waste, bananas
+FACT: Banana peels are edible and packed with potassium, fiber, and vitamin B6 — some cultures blend them into smoothies or fry them as a snack.
+CONTEXT: Instead of tossing them, banana peels can also be used as a natural fertilizer or a leather-shoe polish.
+
+CATEGORY: composting, worms
+FACT: A single worm bin used for composting (vermicomposting) can process about half its own body weight in food scraps every day.
+CONTEXT: Worm castings produced this way make a nutrient-rich natural fertilizer for gardens and houseplants.
+
+=== ELECTRONICS ===
+
+CATEGORY: e-waste, gold, phones
+FACT: One metric ton of discarded smartphones contains more gold than one metric ton of mined gold ore.
+CONTEXT: This is part of why "urban mining" — recovering metals from e-waste — is becoming a serious alternative to traditional mining.
+
+CATEGORY: e-waste, statistics
+FACT: E-waste is the fastest-growing waste stream on the planet, growing several times faster than the world's population.
+CONTEXT: Shorter device lifespans and constant upgrades to phones, laptops, and gadgets are the main drivers.
+
+=== CLOTHING & TEXTILES ===
+
+CATEGORY: clothing, water, jeans
+FACT: It takes about 1,800 gallons of water to grow the cotton for a single pair of jeans.
+CONTEXT: This includes water used for irrigation throughout the cotton's growth cycle, not just the finishing/dyeing process.
+
+CATEGORY: clothing, fast fashion
+FACT: The average garment is worn only about 7-10 times before being discarded.
+CONTEXT: This "fast fashion" cycle is a major driver of textile waste, which is often not accepted in standard curbside recycling.
+
+=== BATTERIES ===
+
+CATEGORY: batteries, fires, recycling
+FACT: A single mishandled lithium-ion battery tossed in the trash or recycling bin can be powerful enough to start a fire that shuts down an entire waste facility.
+CONTEXT: This is why rechargeable batteries need special drop-off locations instead of curbside bins.
+
+=== GENERAL / MISC ===
+
+CATEGORY: general, landfills
+FACT: The average American generates about 4.4 pounds of trash every single day.
+CONTEXT: Over a year, that adds up to roughly 1,600 pounds of trash per person.
+
+CATEGORY: general, ocean, wildlife
+FACT: An estimated 8 million metric tons of plastic enter the ocean every year — about the weight of 800 Eiffel Towers.
+CONTEXT: Much of it comes from land-based sources like litter and mismanaged waste, not just ships or fishing gear.
+
+CATEGORY: general, upcycling
+FACT: The word "upcycling" was popularized in the 1990s to describe turning waste into something of higher value or quality than the original.
+CONTEXT: This differs from "downcycling" (like turning plastic bottles into lower-grade fiber), which still eventually reaches a dead end.
+
+=== USAGE NOTES FOR THE RAG SYSTEM ===
+- Match retrieval on the CATEGORY tags against keywords in the user's message (e.g., user mentions "banana peel" -> surface the food waste/bananas fact).
+- Facts are meant to be a short, fun add-on after the main disposal/reuse answer, not the entire response — keep them to one or two sentences when injected into the chat.
+- Recommended expansion: have the team add facts tied to their own local region/school community for a more personal touch, and periodically verify statistics against current EPA/UN sources since waste figures update year to year.

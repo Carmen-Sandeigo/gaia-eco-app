@@ -1,0 +1,123 @@
+ENVIROBOT KNOWLEDGE BASE
+Purpose: Retrieval source for a RAG chatbot that helps users (1) reuse/repurpose materials and (2) correctly dispose of or resell waste, while surfacing environmental impact facts. Each entry is self-contained (topic + guidance + fact) so it can be chunked and embedded independently. Add local jurisdiction rules as a separate file since disposal rules vary by city/county.
+
+=== SECTION 1: MATERIAL REUSE & DIY IDEAS ===
+
+TOPIC: Old cotton t-shirts and clothing
+REUSE: Cut into cleaning rags, braid into a no-sew tote bag, quilt scraps into a blanket, use as stuffing for pet beds or draft stoppers, turn into produce bags for zero-waste grocery shopping.
+IMPACT FACT: The average American throws away about 70 pounds of clothing per year; textiles can take 200+ years to decompose in a landfill.
+
+TOPIC: Glass jars (pasta sauce, jam, pickle jars)
+REUSE: Wash and reuse as food storage, drinking glasses, pantry organizers for spices/grains, planters for herbs, candle holders, or bathroom organizers for cotton balls/q-tips.
+IMPACT FACT: Glass is 100% recyclable indefinitely without loss of quality, but reusing a jar before recycling it saves the energy cost of remelting.
+
+TOPIC: Cardboard boxes
+REUSE: Flatten for moving/storage, cut into drawer organizers, use as compost "browns," build a cardboard cat scratcher, use as a weed barrier under garden mulch.
+IMPACT FACT: Recycling one ton of cardboard saves about 46 gallons of oil and 9 cubic yards of landfill space.
+
+TOPIC: Plastic bottles and containers
+REUSE: Cut in half to make seedling planters, use as bird feeders, refill as travel-size containers, turn into a watering can with holes poked in the cap.
+IMPACT FACT: Only about 9% of all plastic ever produced has been recycled globally.
+
+TOPIC: Wine corks
+REUSE: Glue into a bulletin board, use as plant markers, slice into coasters, use as knife-tip protectors for storage.
+IMPACT FACT: Natural cork is biodegradable and renewable, harvested from cork oak trees without cutting them down.
+
+TOPIC: Coffee grounds
+REUSE: Use as a natural fertilizer/soil acidifier for plants, deodorize the fridge or shoes, use as a gentle exfoliant, repel pests like slugs and ants in the garden.
+IMPACT FACT: Coffee grounds are rich in nitrogen and make an excellent addition to compost, roughly a 4:1 carbon-to-nitrogen "green" material.
+
+TOPIC: Vegetable scraps (onion skins, carrot tops, celery ends)
+REUSE: Simmer scraps into vegetable stock, regrow green onions/celery/lettuce in water on a windowsill, compost anything not used.
+IMPACT FACT: Food waste is one of the largest components of landfill mass; regrowing scraps can offset small amounts of grocery spending.
+
+TOPIC: Egg cartons
+REUSE: Use as seed-starting trays, paint palettes, small parts/craft organizers, or fire starters when combined with dryer lint and wax.
+IMPACT FACT: Paper egg cartons are compostable; foam cartons are not and should go in the trash unless a specialty foam recycler is available.
+
+TOPIC: Old newspapers and paper
+REUSE: Use as gift wrap, packing material, weed-blocking garden mulch, or fire starter; shred for compost "browns" or pet bedding.
+IMPACT FACT: Recycling paper uses about 60% less energy than making paper from raw wood pulp.
+
+=== SECTION 2: DISPOSAL GUIDANCE FOR COMMONLY CONFUSED MATERIALS ===
+
+TOPIC: Glass disposal
+GUIDANCE: Most curbside programs accept glass bottles and jars, but window glass, mirrors, drinking glasses, and Pyrex/ovenware are NOT recyclable curbside because they have a different melting point and contaminate the batch. Take broken glass or ceramics to a landfill-safe trash bag (wrap in paper/cardboard first) or a specialty glass recycler if available locally.
+COMMON MISTAKE: People assume all glass is recyclable together; drinking glasses and window panes should go in regular trash, not the recycling bin.
+
+TOPIC: Batteries
+GUIDANCE: Single-use alkaline batteries (AA, AAA, 9V) can go in household trash in most US states, though some states (like California) require them to be recycled as hazardous waste. Rechargeable batteries (NiMH, NiCad, lithium-ion) and button/watch batteries should NEVER go in the trash or curbside recycling — they can cause fires. Drop off at a retailer battery bin (Best Buy, Home Depot, Staples) or a household hazardous waste facility.
+COMMON MISTAKE: Tossing lithium-ion or rechargeable batteries in curbside recycling; this is a leading cause of recycling truck and facility fires.
+
+TOPIC: Electronics (e-waste)
+GUIDANCE: Phones, laptops, chargers, and small appliances should never go in household trash or curbside recycling. Use manufacturer take-back programs (Apple, Best Buy), certified e-waste recyclers, or municipal e-waste collection events. Wipe personal data before dropping off.
+COMMON MISTAKE: Throwing old phones/chargers in the trash; e-waste contains heavy metals (lead, mercury, cadmium) that leach into soil and water.
+
+TOPIC: Clothing and textiles
+GUIDANCE: Clothing in good condition should be donated (Goodwill, Salvation Army, local shelters). Worn-out or stained textiles can often be recycled through take-back programs (H&M, Levi's) or textile recycling bins, not curbside recycling bins.
+COMMON MISTAKE: Putting clothing directly in curbside recycling bins, which jams sorting machinery.
+
+TOPIC: Plastic bags and film
+GUIDANCE: Plastic grocery bags, bread bags, and bubble wrap are NOT accepted in curbside recycling because they jam sorting machines. Return them to store drop-off bins (most grocery stores have a bin near the entrance).
+COMMON MISTAKE: Bagging recyclables in plastic bags before putting them in the recycling bin — this often causes the entire batch to be rejected.
+
+TOPIC: Pizza boxes
+GUIDANCE: Clean cardboard is recyclable, but grease-stained sections are not. Tear off and compost/trash the greasy bottom, and recycle the clean lid.
+COMMON MISTAKE: Recycling the whole greasy box, which can contaminate a batch of paper recycling.
+
+TOPIC: Coffee cups (to-go cups)
+GUIDANCE: Most disposable coffee cups have a thin plastic lining that most facilities cannot process, so they go in the trash unless your city specifically accepts them. Lids (if plastic #5) and cardboard sleeves are usually recyclable separately.
+COMMON MISTAKE: Assuming all "paper" cups are recyclable.
+
+TOPIC: Plastics by resin code
+GUIDANCE: #1 (PET, water/soda bottles) and #2 (HDPE, milk jugs, detergent bottles) are widely recyclable curbside. #3 (PVC), #6 (polystyrene/styrofoam), and #7 (mixed/other) are rarely accepted curbside and usually go to the trash or a specialty recycler. #4 (LDPE, bags/film) needs store drop-off, and #5 (PP, yogurt cups, bottle caps) acceptance varies by city.
+COMMON MISTAKE: Assuming the recycling symbol (chasing arrows) means an item is always recyclable; it only identifies the plastic type.
+
+TOPIC: Light bulbs
+GUIDANCE: CFL and fluorescent bulbs contain mercury and must be taken to a hazardous waste facility or a retailer take-back program (Home Depot). LED and incandescent bulbs can typically go in regular trash (check local rules).
+COMMON MISTAKE: Breaking a CFL bulb in the trash, releasing mercury vapor.
+
+TOPIC: Aerosol cans, paint, and household chemicals
+GUIDANCE: Empty aerosol cans are often recyclable curbside if empty; cans with remaining contents, paint, motor oil, and pesticides are household hazardous waste and require a dedicated drop-off facility.
+COMMON MISTAKE: Pouring paint or chemicals down the drain or putting full cans in the trash.
+
+=== SECTION 3: FOOD WASTE REDUCTION ===
+
+TOPIC: Composting basics
+GUIDANCE: A healthy compost pile needs a mix of "greens" (nitrogen-rich: fruit/veg scraps, coffee grounds, grass clippings) and "browns" (carbon-rich: dry leaves, cardboard, newspaper), roughly 1 part green to 2-3 parts brown by volume. Avoid meat, dairy, and oily foods in backyard compost bins (they attract pests); these can go in municipal food-waste programs that use industrial composting instead.
+IMPACT FACT: Food waste in landfills produces methane, a greenhouse gas roughly 25-80x more potent than CO2 over 20 years, because it decomposes without oxygen.
+
+TOPIC: Preventing food spoilage
+GUIDANCE: Store fruits and vegetables that emit ethylene gas (apples, bananas, tomatoes) away from ethylene-sensitive produce (leafy greens, broccoli) to slow ripening/spoilage. Freeze bread, meat, and leftovers before the "use by" date rather than after signs of spoilage appear.
+IMPACT FACT: Roughly 30-40% of the food supply in the US is wasted, much of it at the household level.
+
+TOPIC: Using "ugly" or overripe produce
+REUSE: Overripe bananas can be turned into banana bread; wilting vegetables can go into soups, stir-fries, or stock; bruised fruit can be used in smoothies or jam.
+IMPACT FACT: An estimated 20% of produce is rejected by retailers for cosmetic reasons alone before it even reaches consumers.
+
+=== SECTION 4: RESALE & DONATION ===
+
+TOPIC: Reselling used clothing
+GUIDANCE: Platforms like Poshmark, ThredUp, Depop, and local Facebook Marketplace groups are common outlets. Good listings include clear lighting, multiple angles, exact measurements, and honest descriptions of wear.
+TIP: Mentioning brand name, size, and a short story ("worn twice, smoke-free home") increases buyer trust and sell-through rate.
+
+TOPIC: Reselling electronics
+GUIDANCE: Trade-in programs (Apple, Best Buy, Gazelle) offer fast, low-effort payouts; marketplaces like eBay or Swappa often yield more money but require more listing effort and buyer negotiation.
+TIP: Factory reset devices and include original chargers/boxes when possible to raise resale value.
+
+TOPIC: Reselling furniture and household items
+GUIDANCE: Facebook Marketplace, Craigslist, and OfferUp are common for large items due to local pickup; donation centers (Habitat for Humanity ReStore, Goodwill) are good options for items unlikely to sell quickly.
+TIP: Good natural-light photos and specific measurements reduce back-and-forth messages from buyers.
+
+=== SECTION 5: ENVIRONMENTAL IMPACT QUICK FACTS ===
+
+FACT: Recycling one aluminum can saves enough energy to power a TV for about three hours.
+FACT: It takes an estimated 450+ years for a plastic bottle to decompose in a landfill.
+FACT: The average person generates about 4.4 pounds of trash per day in the United States.
+FACT: Composting food scraps instead of landfilling them can cut a household's carbon footprint related to waste by a significant margin, since it avoids landfill methane production.
+FACT: Recycling steel and tin cans saves about 60-74% of the energy needed to produce them from raw materials.
+FACT: E-waste is the fastest-growing waste stream in the world, driven by short device lifecycles and rapid upgrades.
+
+=== USAGE NOTES FOR THE RAG SYSTEM ===
+- Each TOPIC block above is designed to be one retrievable chunk; keep GUIDANCE/REUSE + IMPACT FACT/TIP together when chunking so answers stay grounded with a supporting fact.
+- This file is a starting seed, not exhaustive. Recommended next steps for the team: (1) scrape/summarize official rules from a specific city or county's public works site for hyper-local accuracy, since disposal rules vary widely by municipality, (2) add a disclaimer in the chatbot UI that users should verify against their local municipality's website, since state/city rules differ, (3) expand with USDA FoodKeeper data for food shelf-life specifics, and (4) consider tagging each entry with a category field (reuse / disposal / food-waste / resale / fact) for filtered retrieval.
