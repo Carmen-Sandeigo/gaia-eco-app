@@ -6,13 +6,16 @@ import torch
 # --- 1. SYSTEM CONFIG & CUSTOM STYLING (Quicksand Font & Theme Colors) ---
 st.set_page_config(page_title="Gaia", page_icon="🌎", layout="wide")
 
+# --- UPDATE THE CSS STYLING SECTION NEAR THE TOP OF YOUR FILE ---
+
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght=400;500;600;700&display=swap');
     
-    /* Apply Quicksand font globally */
+    /* Apply Quicksand font and force dark forest green text globally */
     html, body, [data-testid="stAppViewContainer"], .stApp * {
         font-family: 'Quicksand', sans-serif !important;
+        color: #00241B !important; /* This forces your beautiful forest green text! */
     }
     
     /* Soft Background Tint */
@@ -20,13 +23,18 @@ st.markdown("""
         background-color: #F4FFF5;
     }
     
-    /* Main Action Button Color (#04724D) */
+    /* Main Action Button Color (#04724D) with bright white text */
     div.stButton > button:first-child {
         background-color: #04724D !important;
         color: white !important;
         border-radius: 12px !important;
         font-weight: 600 !important;
         border: none !important;
+    }
+    
+    /* Fix text inputs and chat boxes to have dark text inside them */
+    textarea, input {
+        color: #00241B !important;
     }
     </style>
     """, unsafe_allow_html=True)
