@@ -12,32 +12,71 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght=400;500;600;700&display=swap');
     
-    /* Apply Quicksand font and force dark forest green text globally */
+    /* 1. Global Font and Text Color Fix */
     html, body, [data-testid="stAppViewContainer"], .stApp * {
         font-family: 'Quicksand', sans-serif !important;
-        color: #00241B !important; /* This forces your beautiful forest green text! */
+        color: #00241B !important;
     }
     
-    /* Soft Background Tint */
+    /* 2. Soft Background Tint */
     [data-testid="stAppViewContainer"] {
-        background-color: #F4FFF5;
+        background-color: #F4FFF5 !important;
     }
-    
-    /* Main Action Button Color (#04724D) with bright white text */
-    div.stButton > button:first-child {
+
+    /* 3. Strip all default borders, shadows, and background blocks to look like Gradio */
+    [data-testid="stMetric"], 
+    [data-testid="stMetricContainer"], 
+    div[data-testid="stVerticalBlock"] > div {
+        border: none !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    /* 4. Fix Text Inputs & Textareas (Rounded, Soft Gray Border) */
+    .stTextArea textarea, .stTextInput input {
+        background-color: white !important;
+        color: #00241B !important;
+        border: 1px solid #E0E0E0 !important;
+        border-radius: 12px !important;
+        padding: 12px !important;
+    }
+
+    /* 5. Custom Button Styling (Matches your deep forest green and rounded corners) */
+    div.stButton > button {
         background-color: #04724D !important;
         color: white !important;
         border-radius: 12px !important;
         font-weight: 600 !important;
         border: none !important;
+        padding: 10px 20px !important;
+        transition: background-color 0.2s ease !important;
     }
     
-    /* Fix text inputs and chat boxes to have dark text inside them */
-    textarea, input {
+    div.stButton > button:hover {
+        background-color: #03583C !important;
+        color: white !important;
+    }
+
+    /* 6. Clean Tab Bar to resemble Gradio's minimalistic tabs */
+    button[data-baseweb="tab"] {
+        font-weight: 600 !important;
+        color: #04724D !important;
+    }
+    
+    button[data-baseweb="tab"][aria-selected="true"] {
+        border-bottom-color: #04724D !important;
         color: #00241B !important;
+    }
+
+    /* 7. Beautifully curve the status/info message box */
+    div[data-testid="stNotification"] {
+        border-radius: 12px !important;
+        background-color: #EAF7EA !important;
+        border: 1px solid #C8E6C9 !important;
     }
     </style>
     """, unsafe_allow_html=True)
+
 
 # --- 2. DATA FILE LOADER ---
 with open("envirobot_knowledge_base.txt", "r", encoding="utf-8") as file:
