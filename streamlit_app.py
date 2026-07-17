@@ -147,13 +147,18 @@ def respond(message, history):
         
     messages = [{"role": "system", "content": f"{system_content} Give all responses in English. Do not use Chinese or any other language besides English. Use the following information for a response: {top_results}, {instructions_text}"}]
     
+    # FIX: Safely parse history based on how Streamlit structures dictionaries
     for turn in history:
-        messages.append({"role": turn["role"], "content": turn["content"]})
+        if isinstance(turn, dict) and "role" in turn and "content" in turn:
+            messages.append({"role": turn["role"], "content": turn["content"]})
+        elif isinstance(turn, (list, tuple)) and len(turn) == 2:
+            messages.append({"role": turn[0], "content": turn[1]})
+            
     messages.append({"role": "user", "content": message})
     
     response = client.chat_completion(messages, max_tokens=350, temperature=1.0)
     return response.choices[0].message.content.strip()
-
+    
 # --- 5. APP CONTAINER DESIGN ---
 st.image("logo_banner.png", use_container_width=True)
 st.title("🌎 Welcome to Gaia!")
