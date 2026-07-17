@@ -3,19 +3,14 @@ from huggingface_hub import InferenceClient
 from sentence_transformers import SentenceTransformer
 import torch
 
-# --- 1. SYSTEM CONFIG & CUSTOM STYLING (Quicksand Font & Theme Colors) ---
+# --- 1. SYSTEM CONFIG & COMPLETE OVERRIDE STYLING ---
 st.set_page_config(page_title="Gaia", page_icon="🌎", layout="wide")
-/* Add this inside your existing CSS block near the top */
-.stTextArea textarea:disabled {
-    color: #00241B !important;
-    -webkit-text-fill-color: #00241B !important; /* Forces mobile/safari/chrome text color */
-    background-color: #FFFFFF !important;
-}
+
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght=400;500;600;700&display=swap');
     
-    /* 1. FORCE FONT FAMILY EVERYWHERE */
+    /* 1. Force Font Family Everywhere */
     * {
         font-family: 'Quicksand', sans-serif !important;
     }
@@ -24,15 +19,22 @@ st.markdown("""
         background-color: #F4FFF5 !important;
     }
 
-    /* 2. TEXT COLOR REVISIONS (Main body & headers) */
+    /* 2. Text Colors (Main body, headers, and logs) */
     h1, h2, h3, h4, h5, h6, p, span, label, [data-testid="stMarkdownContainer"] p {
         color: #00241B !important;
     }
 
-    /* 3. BUTTONS: Solid Green Background (#04724D) with Crisp White Text */
+    /* 3. Force Activity Log text area to remain visible and dark green */
+    .stTextArea textarea, .stTextArea textarea:disabled {
+        color: #00241B !important;
+        -webkit-text-fill-color: #00241B !important;
+        background-color: #FFFFFF !important;
+    }
+
+    /* 4. Buttons: Solid Green (#04724D) with White Text */
     div.stButton > button, div.stButton > button p {
         background-color: #04724D !important;
-        color: #FFFFFF !important; /* Forces text color white */
+        color: #FFFFFF !important;
         border-radius: 12px !important;
         font-weight: 600 !important;
         border: none !important;
@@ -43,34 +45,29 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* 4. CHATBOT INTERFACE FIXES (Clean text visibility) */
+    /* 5. Chat Interface Tints */
     [data-testid="stChatMessage"] {
-        background-color: #EAF7EA !important; /* Soft green bubble */
+        background-color: #EAF7EA !important;
         border-radius: 12px !important;
         border: none !important;
         padding: 15px !important;
         margin-bottom: 10px !important;
     }
 
-    /* Target specific chat text containers */
-    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p {
-        color: #00241B !important;
-    }
-
-    /* User specific bubble alternative tint if desired */
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p,
     [data-testid="stChatMessageContent"] {
         color: #00241B !important;
     }
 
-    /* 5. INPUT BOX FIXES */
-    .stTextArea textarea, .stTextInput input, [data-testid="stChatInput"] textarea {
+    /* 6. Inputs */
+    .stTextInput input, [data-testid="stChatInput"] textarea {
         background-color: #FFFFFF !important;
         color: #00241B !important;
         border: 1px solid #E0E0E0 !important;
         border-radius: 12px !important;
     }
 
-    /* 6. TAB NAVIGATION CLEANUP */
+    /* 7. Tabs */
     button[data-baseweb="tab"] {
         font-weight: 700 !important;
         color: #04724D !important;
@@ -81,7 +78,6 @@ st.markdown("""
         color: #00241B !important;
     }
 
-    /* Hide metric borders entirely */
     [data-testid="stMetric"], [data-testid="stMetricContainer"] {
         border: none !important;
         box-shadow: none !important;
@@ -103,7 +99,7 @@ with open("disposal_instructions.txt", "r", encoding="utf-8") as file:
 with open("upscaling_instructions.txt", "r", encoding="utf-8") as file:
     upscaling_instructions_text = file.read()
 
-# --- 3. RAG EMBEDDINGS BACKEND (Your exact logic) ---
+# --- 3. RAG EMBEDDINGS BACKEND ---
 def preprocess_text(text_list):
     cleaned_chunks = []
     for text in text_list:
@@ -134,6 +130,7 @@ def get_top_chunks(query, chunk_embeddings, text_chunks):
 # --- 4. HUGGING FACE INFERENCE CLIENT ---
 client = InferenceClient("Qwen/Qwen2.5-7B-Instruct", token=st.secrets.get("HF_TOKEN"))
 
+# Fixed stray definition error here
 DEFAULT_SYSTEM_PROMPT = f"You're an environmental chatbot that answers the user's questions. You ask the user what materials the user has and then give suggestions on what they can make using those materials to reuse it. If the user asks to dispose of the materials, give suggestions on how to get rid of the materials in ways that are environmentally sustainable. Use the following information for a response: {instructions_text}"
 DISPOSAL_PROMPT = f"You're an environmental chatbot focused ONLY on disposal. Ask the user what materials they need to get rid of, then give specific, environmentally sustainable disposal methods. This file has more details: {disposal_instructions_text}"
 CRAFTING_PROMPT = f"You're an environmental chatbot focused ONLY on crafting/reuse. Ask the user what materials they have on hand, then suggest specific, creative DIY projects they can make with those materials. This file has more details: {crafting_instructions_text}"
@@ -150,26 +147,20 @@ def respond(message, history):
     else:
         system_content = DEFAULT_SYSTEM_PROMPT
         
-    messages = [{"role": "system", "content": f"{system_content} Give all responses in English. Do not use Chinese or any other language besides English. Use the following information for a response: {top_results}, {instructions_text}"}]
+    ai_messages = [{"role": "system", "content": f"{system_content} Give all responses in English. Do not use Chinese or any other language besides English. Use the following information for a response: {top_results}, {instructions_text}"}]
     
-    # FIX: Safely parse history based on how Streamlit structures dictionaries
     for turn in history:
-        if isinstance(turn, dict) and "role" in turn and "content" in turn:
-            messages.append({"role": turn["role"], "content": turn["content"]})
-        elif isinstance(turn, (list, tuple)) and len(turn) == 2:
-            messages.append({"role": turn[0], "content": turn[1]})
-            
-    messages.append({"role": "user", "content": message})
+        ai_messages.append({"role": turn["role"], "content": turn["content"]})
+    ai_messages.append({"role": "user", "content": message})
     
-    response = client.chat_completion(messages, max_tokens=350, temperature=1.0)
+    response = client.chat_completion(ai_messages, max_tokens=350, temperature=1.0)
     return response.choices[0].message.content.strip()
-    
-# --- 5. APP CONTAINER DESIGN ---
+
+# --- 5. INTERFACE DESIGN ---
 st.image("logo_banner.png", use_container_width=True)
 st.title("🌎 Welcome to Gaia!")
 st.write("#### Decide whether you'd like to dispose, reuse, or upcycle your items!")
 
-# Initialize session storage variables for tracker and chat memory
 if "eco_score" not in st.session_state:
     st.session_state.eco_score = 0
 if "eco_logs" not in st.session_state:
@@ -177,7 +168,6 @@ if "eco_logs" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# Streamlit Tabs
 tab1, tab2 = st.tabs(["💬 Chat with Gaia", "📊 Live Eco-Tracker"])
 
 # ==========================================
@@ -186,11 +176,9 @@ tab1, tab2 = st.tabs(["💬 Chat with Gaia", "📊 Live Eco-Tracker"])
 with tab1:
     st.caption("Conversations for a cleaner Earth!")
     
-    # Render Quick Quick-Click Prompt Example Buttons
     col_ex1, col_ex2, col_ex3 = st.columns(3)
     if col_ex1.button("📌 Disposal Setup", use_container_width=True):
         st.session_state.chat_history.append({"role": "user", "content": "Disposal"})
-        # Clean history array formatting for safe lookup
         clean_hist = [{"role": m["role"], "content": m["content"]} for m in st.session_state.chat_history[:-1]]
         reply = respond("Disposal", clean_hist)
         st.session_state.chat_history.append({"role": "assistant", "content": reply})
@@ -210,12 +198,10 @@ with tab1:
         st.session_state.chat_history.append({"role": "assistant", "content": reply})
         st.rerun()
 
-    # Display running thread conversation
     for chat in st.session_state.chat_history:
         with st.chat_message(chat["role"]):
             st.write(chat["content"])
 
-    # Wait for dynamic user text box entry
     if user_prompt := st.chat_input("Ask Gaia anything..."):
         with st.chat_message("user"):
             st.write(user_prompt)
@@ -229,12 +215,11 @@ with tab1:
         st.session_state.chat_history.append({"role": "assistant", "content": bot_reply})
 
 # ==========================================
-# TAB 2: LOCK-SECURED ECO-TRACKER MODULE
+# TAB 2: LIVE ECO-TRACKER MODULE
 # ==========================================
 with tab2:
     st.write("### Claim your Eco-Points here as you complete Gaia's recommendations!")
     
-    # Live Badge Scoring Logic 
     score = st.session_state.eco_score
     if score >= 350:
         badge, progress = "🌍 Level 4: Eco Hero", 1.0
@@ -249,7 +234,6 @@ with tab2:
     col_stats, col_btns = st.columns(2)
     
     with col_stats:
-        # Non-editable Metrics Displays
         st.metric(label="Your Total Eco-Points", value=f"{score} pts")
         st.progress(progress, text="Progress to Next Earth Badge")
         st.info(f"Your Current Status: **{badge}**")
