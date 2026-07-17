@@ -3,14 +3,15 @@ from huggingface_hub import InferenceClient
 from sentence_transformers import SentenceTransformer
 import torch
 
-# --- 1. SYSTEM CONFIG & COMPLETE OVERRIDE STYLING ---
+# --- 1. CONFIG & EXPLICIT VISUAL FIXES ---
 st.set_page_config(page_title="Gaia", page_icon="🌎", layout="wide")
 
+# This CSS strips Streamlit defaults completely and locks down text visibility
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght=400;500;600;700&display=swap');
     
-    /* 1. Force Font Family Everywhere */
+    /* Force Font and Dark Forest Green Text globally */
     * {
         font-family: 'Quicksand', sans-serif !important;
     }
@@ -19,19 +20,19 @@ st.markdown("""
         background-color: #F4FFF5 !important;
     }
 
-    /* 2. Text Colors (Main body, headers, and logs) */
+    /* Force all text headers and labels to deep forest green */
     h1, h2, h3, h4, h5, h6, p, span, label, [data-testid="stMarkdownContainer"] p {
         color: #00241B !important;
     }
 
-    /* 3. Force Activity Log text area to remain visible and dark green */
+    /* Fix Activity Log text box background and text visibility */
     .stTextArea textarea, .stTextArea textarea:disabled {
         color: #00241B !important;
         -webkit-text-fill-color: #00241B !important;
         background-color: #FFFFFF !important;
     }
 
-    /* 4. Buttons: Solid Green (#04724D) with White Text */
+    /* Primary Action Buttons (#04724D) with Crisp White Text */
     div.stButton > button, div.stButton > button p {
         background-color: #04724D !important;
         color: #FFFFFF !important;
@@ -45,21 +46,20 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* 5. Chat Interface Tints */
+    /* Style the Chat Message Bubbles directly */
     [data-testid="stChatMessage"] {
         background-color: #EAF7EA !important;
         border-radius: 12px !important;
         border: none !important;
-        padding: 15px !important;
-        margin-bottom: 10px !important;
     }
 
+    /* Force dark text inside the message bubbles */
     [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p,
-    [data-testid="stChatMessageContent"] {
+    [data-testid="stChatMessageContent"], .stChatMessage p {
         color: #00241B !important;
     }
 
-    /* 6. Inputs */
+    /* Inputs and User Fields */
     .stTextInput input, [data-testid="stChatInput"] textarea {
         background-color: #FFFFFF !important;
         color: #00241B !important;
@@ -67,7 +67,7 @@ st.markdown("""
         border-radius: 12px !important;
     }
 
-    /* 7. Tabs */
+    /* Clean Tab Menu Navigation */
     button[data-baseweb="tab"] {
         font-weight: 700 !important;
         color: #04724D !important;
@@ -130,7 +130,7 @@ def get_top_chunks(query, chunk_embeddings, text_chunks):
 # --- 4. HUGGING FACE INFERENCE CLIENT ---
 client = InferenceClient("Qwen/Qwen2.5-7B-Instruct", token=st.secrets.get("HF_TOKEN"))
 
-# Fixed stray definition error here
+# FIXED: Removed the internal "messages =" assignment that broke the namespace scope
 DEFAULT_SYSTEM_PROMPT = f"You're an environmental chatbot that answers the user's questions. You ask the user what materials the user has and then give suggestions on what they can make using those materials to reuse it. If the user asks to dispose of the materials, give suggestions on how to get rid of the materials in ways that are environmentally sustainable. Use the following information for a response: {instructions_text}"
 DISPOSAL_PROMPT = f"You're an environmental chatbot focused ONLY on disposal. Ask the user what materials they need to get rid of, then give specific, environmentally sustainable disposal methods. This file has more details: {disposal_instructions_text}"
 CRAFTING_PROMPT = f"You're an environmental chatbot focused ONLY on crafting/reuse. Ask the user what materials they have on hand, then suggest specific, creative DIY projects they can make with those materials. This file has more details: {crafting_instructions_text}"
@@ -156,7 +156,7 @@ def respond(message, history):
     response = client.chat_completion(ai_messages, max_tokens=350, temperature=1.0)
     return response.choices[0].message.content.strip()
 
-# --- 5. INTERFACE DESIGN ---
+# --- 5. INTERFACE CONTAINER ---
 st.image("logo_banner.png", use_container_width=True)
 st.title("🌎 Welcome to Gaia!")
 st.write("#### Decide whether you'd like to dispose, reuse, or upcycle your items!")
@@ -198,6 +198,7 @@ with tab1:
         st.session_state.chat_history.append({"role": "assistant", "content": reply})
         st.rerun()
 
+    # Render ongoing conversations
     for chat in st.session_state.chat_history:
         with st.chat_message(chat["role"]):
             st.write(chat["content"])
