@@ -179,7 +179,7 @@ client = InferenceClient("Qwen/Qwen2.5-7B-Instruct", token=HF_TOKEN)
 
 # Separate client pointed at a vision-capable model for the "identify a material
 # from a photo" feature. Same provider/token, different model.
-vision_client = InferenceClient("Qwen/Qwen2.5-VL-7B-Instruct", token=HF_TOKEN)
+vision_client = InferenceClient("zai-org/GLM-4.5V", token=HF_TOKEN)
 
 
 def identify_material_from_image(image_bytes, mime_type="image/jpeg"):
