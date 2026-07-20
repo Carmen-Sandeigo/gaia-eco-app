@@ -12,7 +12,7 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 
-    * {
+    *:not([data-testid="stIconMaterial"]):not(.material-icons) {
         font-family: 'Quicksand', sans-serif !important;
     }
 
@@ -275,15 +275,16 @@ with tab1:
         st.rerun()
 
     for chat in st.session_state.chat_history:
-        with st.chat_message(chat["role"]):
+        avatar = "🧑" if chat["role"] == "user" else "🌎"
+        with st.chat_message(chat["role"], avatar=avatar):
             st.write(chat["content"])
 
     if user_prompt := st.chat_input("Ask Gaia anything..."):
-        with st.chat_message("user"):
+        with st.chat_message("user", avatar="🧑"):
             st.write(user_prompt)
         st.session_state.chat_history.append({"role": "user", "content": user_prompt})
 
-        with st.chat_message("assistant"):
+        with st.chat_message("assistant", avatar="🌎"):
             with st.spinner("Gaia is typing..."):
                 clean_hist = [
                     {"role": m["role"], "content": m["content"]}
