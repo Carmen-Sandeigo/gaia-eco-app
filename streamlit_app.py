@@ -183,7 +183,8 @@ vision_client = InferenceClient("Qwen/Qwen2.5-VL-7B-Instruct", token=HF_TOKEN)
 
 
 def identify_material_from_image(image_bytes, mime_type="image/jpeg"):
-    """Send a photo to a vision model and get back a short material description."""
+    """Send a photo to a vision model and get back a short material description.
+    Returns (description, error_message) — exactly one of them will be set."""
     import base64
     b64_image = base64.b64encode(image_bytes).decode("utf-8")
     try:
@@ -210,9 +211,9 @@ def identify_material_from_image(image_bytes, mime_type="image/jpeg"):
             max_tokens=60,
             temperature=0.4,
         )
-        return response.choices[0].message.content.strip()
+        return response.choices[0].message.content.strip(), None
     except Exception as e:
-        return None
+        return None, str(e)
 
 DEFAULT_SYSTEM_PROMPT = (
     "You're an environmental chatbot that answers the user's questions. You ask the "
@@ -329,7 +330,7 @@ if page == "💬 Chat with Gaia":
             if st.button("🔍 Identify this item", key="identify_btn"):
                 with st.spinner("Gaia is taking a look..."):
                     mime = uploaded_image.type or "image/jpeg"
-                    description = identify_material_from_image(uploaded_image.getvalue(), mime)
+                    description, error = identify_material_from_image(uploaded_image.getvalue(), mime)
 
                 if description:
                     user_message = f"I have this item: {description}. What should I do with it?"
@@ -343,7 +344,7 @@ if page == "💬 Chat with Gaia":
                     st.session_state.chat_history.append({"role": "assistant", "content": reply})
                     st.rerun()
                 else:
-                    st.error("Gaia couldn't identify that photo. Try a clearer image, or just describe it in the chat below.")
+                    st.error(f"Gaia couldn't identify that photo: {error}")
 
     if col_ex3.button("🏷️ Upscaling Setup", use_container_width=True, key="upscaling_btn"):
         run_preset("Upscaling")
