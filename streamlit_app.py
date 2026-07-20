@@ -177,6 +177,43 @@ if not HF_TOKEN:
 
 client = InferenceClient("Qwen/Qwen2.5-7B-Instruct", token=HF_TOKEN)
 
+# Separate client pointed at a vision-capable model for the "identify a material
+# from a photo" feature. Same provider/token, different model.
+vision_client = InferenceClient("Qwen/Qwen2.5-VL-7B-Instruct", token=HF_TOKEN)
+
+
+def identify_material_from_image(image_bytes, mime_type="image/jpeg"):
+    """Send a photo to a vision model and get back a short material description."""
+    import base64
+    b64_image = base64.b64encode(image_bytes).decode("utf-8")
+    try:
+        response = vision_client.chat_completion(
+            messages=[{
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": (
+                            "Look at this photo of an item someone wants to reuse, "
+                            "recycle, or dispose of. In one short sentence, name the "
+                            "item and the main material(s) it's made of (e.g. "
+                            "'a glass jar' or 'a cardboard box with plastic tape'). "
+                            "Don't add any extra commentary."
+                        ),
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:{mime_type};base64,{b64_image}"},
+                    },
+                ],
+            }],
+            max_tokens=60,
+            temperature=0.4,
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        return None
+
 DEFAULT_SYSTEM_PROMPT = (
     "You're an environmental chatbot that answers the user's questions. You ask the "
     "user what materials the user has and then give suggestions on what they can make "
@@ -280,6 +317,33 @@ if page == "💬 Chat with Gaia":
     if col_ex2.button("✂️ Crafting Setup", use_container_width=True, key="crafting_btn"):
         run_preset("Crafting")
         st.rerun()
+
+    with st.expander("📸 Not sure what it's made of? Upload a photo and Gaia will identify it"):
+        uploaded_image = st.file_uploader(
+            "Upload a photo of the item",
+            type=["jpg", "jpeg", "png"],
+            key="material_photo",
+        )
+        if uploaded_image is not None:
+            st.image(uploaded_image, width=250)
+            if st.button("🔍 Identify this item", key="identify_btn"):
+                with st.spinner("Gaia is taking a look..."):
+                    mime = uploaded_image.type or "image/jpeg"
+                    description = identify_material_from_image(uploaded_image.getvalue(), mime)
+
+                if description:
+                    user_message = f"I have this item: {description}. What should I do with it?"
+                    st.session_state.chat_history.append({"role": "user", "content": user_message})
+                    clean_hist = [
+                        {"role": m["role"], "content": m["content"]}
+                        for m in st.session_state.chat_history[:-1]
+                    ]
+                    with st.spinner("Gaia is typing..."):
+                        reply = respond(user_message, clean_hist)
+                    st.session_state.chat_history.append({"role": "assistant", "content": reply})
+                    st.rerun()
+                else:
+                    st.error("Gaia couldn't identify that photo. Try a clearer image, or just describe it in the chat below.")
 
     if col_ex3.button("🏷️ Upscaling Setup", use_container_width=True, key="upscaling_btn"):
         run_preset("Upscaling")
