@@ -238,9 +238,6 @@ def identify_material_from_image(image_bytes, mime_type="image/jpeg"):
             errors.append(f"{model_id}: {e}")
 
     return None, " | ".join(errors)
-        return None, f"Model returned an empty response. Raw message object: {message!r}"
-    except Exception as e:
-        return None, str(e)
 
 DEFAULT_SYSTEM_PROMPT = (
     "You're an environmental chatbot that answers the user's questions. You ask the "
