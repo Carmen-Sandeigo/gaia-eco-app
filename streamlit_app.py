@@ -177,52 +177,67 @@ if not HF_TOKEN:
 
 client = InferenceClient("Qwen/Qwen2.5-7B-Instruct", token=HF_TOKEN)
 
-# Separate client pointed at a vision-capable model for the "identify a material
-# from a photo" feature. Same provider/token, different model.
-vision_client = InferenceClient("zai-org/GLM-4.5V", token=HF_TOKEN)
+
+# Candidate (model, provider) pairs to try in order for the "identify a material
+# from a photo" feature. Providers can be flaky or lack a given model, so we
+# fall through the list instead of hard-coding just one.
+VISION_CANDIDATES = [
+    ("CohereLabs/command-a-vision-07-2025", "cohere"),
+    ("zai-org/GLM-4.5V", None),
+    ("meta-llama/Llama-3.2-11B-Vision-Instruct", None),
+]
 
 
 def identify_material_from_image(image_bytes, mime_type="image/jpeg"):
     """Send a photo to a vision model and get back a short material description.
-    Returns (description, error_message) — exactly one of them will be set."""
+    Tries several models/providers in order. Returns (description, error_message)
+    — exactly one of them will be set."""
     import base64
     b64_image = base64.b64encode(image_bytes).decode("utf-8")
-    try:
-        response = vision_client.chat_completion(
-            messages=[{
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": (
-                            "Look at this photo of an item someone wants to reuse, "
-                            "recycle, or dispose of. In one short sentence, name the "
-                            "item and the main material(s) it's made of (e.g. "
-                            "'a glass jar' or 'a cardboard box with plastic tape'). "
-                            "Don't add any extra commentary."
-                        ),
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {"url": f"data:{mime_type};base64,{b64_image}"},
-                    },
-                ],
-            }],
-            max_tokens=300,
-            temperature=0.4,
-        )
-        message = response.choices[0].message
-        content = (message.content or "").strip()
 
-        # Some models (e.g. reasoning-capable ones) put output in a separate
-        # reasoning field instead of content. Fall back to that if present.
-        if not content:
-            reasoning = getattr(message, "reasoning_content", None)
-            if reasoning:
-                content = reasoning.strip()
+    messages = [{
+        "role": "user",
+        "content": [
+            {
+                "type": "text",
+                "text": (
+                    "Look at this photo of an item someone wants to reuse, "
+                    "recycle, or dispose of. In one short sentence, name the "
+                    "item and the main material(s) it's made of (e.g. "
+                    "'a glass jar' or 'a cardboard box with plastic tape'). "
+                    "Don't add any extra commentary."
+                ),
+            },
+            {
+                "type": "image_url",
+                "image_url": {"url": f"data:{mime_type};base64,{b64_image}"},
+            },
+        ],
+    }]
 
-        if content:
-            return content, None
+    errors = []
+    for model_id, provider in VISION_CANDIDATES:
+        try:
+            candidate_client = InferenceClient(
+                model_id, token=HF_TOKEN, provider=provider
+            ) if provider else InferenceClient(model_id, token=HF_TOKEN)
+
+            response = candidate_client.chat_completion(
+                messages=messages, max_tokens=300, temperature=0.4
+            )
+            message = response.choices[0].message
+            content = (message.content or "").strip()
+            if not content:
+                reasoning = getattr(message, "reasoning_content", None)
+                if reasoning:
+                    content = reasoning.strip()
+            if content:
+                return content, None
+            errors.append(f"{model_id}: empty response")
+        except Exception as e:
+            errors.append(f"{model_id}: {e}")
+
+    return None, " | ".join(errors)
         return None, f"Model returned an empty response. Raw message object: {message!r}"
     except Exception as e:
         return None, str(e)
