@@ -208,10 +208,22 @@ def identify_material_from_image(image_bytes, mime_type="image/jpeg"):
                     },
                 ],
             }],
-            max_tokens=60,
+            max_tokens=300,
             temperature=0.4,
         )
-        return response.choices[0].message.content.strip(), None
+        message = response.choices[0].message
+        content = (message.content or "").strip()
+
+        # Some models (e.g. reasoning-capable ones) put output in a separate
+        # reasoning field instead of content. Fall back to that if present.
+        if not content:
+            reasoning = getattr(message, "reasoning_content", None)
+            if reasoning:
+                content = reasoning.strip()
+
+        if content:
+            return content, None
+        return None, f"Model returned an empty response. Raw message object: {message!r}"
     except Exception as e:
         return None, str(e)
 
