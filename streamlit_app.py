@@ -2,6 +2,8 @@ import streamlit as st
 from huggingface_hub import InferenceClient
 from sentence_transformers import SentenceTransformer
 import torch
+import pandas as pd
+from datetime import datetime
 
 # --- 1. CONFIG & VISUAL FIXES ---
 st.set_page_config(page_title="Gaia", page_icon="🌎", layout="wide")
@@ -243,12 +245,21 @@ if "eco_logs" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-tab1, tab2 = st.tabs(["💬 Chat with Gaia", "📊 Live Eco-Tracker"])
+page = st.radio(
+    "Navigate",
+    ["💬 Chat with Gaia", "📊 Live Eco-Tracker"],
+    horizontal=True,
+    label_visibility="collapsed",
+    key="page_nav",
+)
+st.divider()
 
 # ==========================================
-# TAB 1: CHAT
+# PAGE: CHAT
+# (st.chat_input must stay at the top level, not nested inside a tab/container,
+# or Streamlit won't pin it to the bottom of the screen — that was the bug.)
 # ==========================================
-with tab1:
+if page == "💬 Chat with Gaia":
     st.caption("Conversations for a cleaner Earth!")
 
     def run_preset(preset_message):
@@ -295,20 +306,28 @@ with tab1:
         st.session_state.chat_history.append({"role": "assistant", "content": bot_reply})
 
 # ==========================================
-# TAB 2: LIVE ECO-TRACKER
+# PAGE: LIVE ECO-TRACKER
 # ==========================================
-with tab2:
+else:
     st.write("### Claim your Eco-Points here as you complete Gaia's recommendations!")
 
     score = st.session_state.eco_score
-    if score >= 350:
-        badge, progress = "🌍 Level 4: Eco Hero", 1.0
-    elif score >= 250:
-        badge, progress = "🌳 Level 3: Earth Guardian", (score - 250) / 100
-    elif score >= 100:
-        badge, progress = "🌿 Level 2: Green Sprout", (score - 100) / 150
-    else:
-        badge, progress = "🌱 Level 1: Eco Seedling", score / 100
+
+    LEVELS = [
+        (700, "🏆 Level 6: Planet Protector"),
+        (500, "🌍 Level 5: Eco Hero"),
+        (350, "🌳 Level 4: Earth Guardian"),
+        (200, "🌿 Level 3: Green Sprout"),
+        (75, "🌾 Level 2: Growing Green"),
+        (0, "🌱 Level 1: Eco Seedling"),
+    ]
+    for i, (threshold, name) in enumerate(LEVELS):
+        if score >= threshold:
+            badge = name
+            next_threshold = LEVELS[i - 1][0] if i > 0 else threshold
+            floor = threshold
+            progress = 1.0 if next_threshold == floor else (score - floor) / (next_threshold - floor)
+            break
     progress = min(max(progress, 0.0), 1.0)
 
     col_stats, col_btns = st.columns(2)
@@ -317,34 +336,48 @@ with tab2:
         st.metric(label="Your Total Eco-Points", value=f"{score} pts")
         st.progress(progress, text="Progress to Next Earth Badge")
         st.info(f"Your Current Status: **{badge}**")
+        st.caption(f"🔥 {len(st.session_state.eco_logs)} activities logged so far")
 
     with col_btns:
         st.write("#### What did you complete today?")
 
+        def log_activity(label, points):
+            st.session_state.eco_score += points
+            st.session_state.eco_logs.append({
+                "activity": label,
+                "points": points,
+                "timestamp": datetime.now(),
+            })
+
         if st.button("✂️ Completed a DIY Craft (+25 pts)", use_container_width=True, key="craft_btn"):
-            st.session_state.eco_score += 25
-            st.session_state.eco_logs.append("✅ Completed A Diy Craft")
+            log_activity("Completed a DIY Craft", 25)
             st.rerun()
 
         if st.button("🗑️ Disposed of Materials Safely (+15 pts)", use_container_width=True, key="dispose_btn"):
-            st.session_state.eco_score += 15
-            st.session_state.eco_logs.append("✅ Disposed Of Materials Safely")
+            log_activity("Disposed of Materials Safely", 15)
             st.rerun()
 
         if st.button("🏷️ Listed/Sold an Item (+20 pts)", use_container_width=True, key="sell_btn"):
-            st.session_state.eco_score += 20
-            st.session_state.eco_logs.append("✅ Listed/Sold An Item")
+            log_activity("Listed/Sold an Item", 20)
             st.rerun()
 
         if st.button("🎁 Donated Used Clothing (+20 pts)", use_container_width=True, key="donate_btn"):
-            st.session_state.eco_score += 20
-            st.session_state.eco_logs.append("✅ Donated Used Clothing")
+            log_activity("Donated Used Clothing", 20)
             st.rerun()
 
     st.write("### 📜 Your Green Activity Log")
-    log_history_text = (
-        "\n".join(st.session_state.eco_logs[::-1])
-        if st.session_state.eco_logs
-        else "No activities logged yet. Start completing tasks!"
-    )
-    st.text_area("History", value=log_history_text, height=150, disabled=True)
+    if st.session_state.eco_logs:
+        log_df = pd.DataFrame(
+            [
+                {
+                    "Date": entry["timestamp"].strftime("%b %d, %Y"),
+                    "Time": entry["timestamp"].strftime("%I:%M %p"),
+                    "Activity": entry["activity"],
+                    "Points": f"+{entry['points']}",
+                }
+                for entry in reversed(st.session_state.eco_logs)
+            ]
+        )
+        st.dataframe(log_df, use_container_width=True, hide_index=True)
+    else:
+        st.caption("No activities logged yet. Start completing tasks!")
